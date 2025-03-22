@@ -15,7 +15,7 @@ const Profile = () => {
         <div className="mt-4 mx-6 flex items-center space-x-4">
           <div className="relative">
             <img src={thumbnail} alt="Profile" className="w-16 h-16" />
-            <span className="absolute bottom-0 right-0 ">
+            <span className="absolute bottom-0 right-0 cursor-pointer">
               <img src={cameraIcon} alt="upload button" />
             </span>
           </div>

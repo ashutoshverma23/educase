@@ -1,7 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const SignUp = () => {
+  const [formData, setFormData] = useState({
+    fullName: "",
+    phoneNumber: "",
+    email: "",
+    password: "",
+    companyName: "",
+    isAgency: "",
+  });
+
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  // Handle Input Change
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => {
+      const updatedForm = { ...prev, [name]: value };
+      validateForm(updatedForm);
+      return updatedForm;
+    });
+  };
+
+  // Validate if all required fields are filled
+  const validateForm = (data) => {
+    const { fullName, phoneNumber, password, isAgency } = data;
+    setIsFormValid(fullName && phoneNumber && password && isAgency);
+  };
+
   return (
     <div className="flex justify-center bg-white">
       <div className="bg-neutral-100 p-6 w-full sm:w-[375px] h-[100dvh] sm:h-[812px] border border-gray-200 rounded-2xl shadow-md flex flex-col justify-between">
@@ -12,57 +39,72 @@ const SignUp = () => {
 
           <form className="mt-4 text-left space-y-4 flex-grow">
             <div className="mt-6 relative">
-              <label className="absolute -top-3 left-3 bg-neutral-100 px-1 text-sm font-medium text-purple-600">
+              <label className="absolute -top-3 left-3 bg-neutral-100 px-1 text-sm font-medium text-[#6C25FF]">
                 Full Name*
               </label>
               <input
                 type="text"
+                name="fullName"
+                value={formData.fullName}
+                onChange={handleChange}
                 placeholder="Marry Doe"
-                className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6C25FF]"
               />
             </div>
 
             <div className="mt-6 relative">
-              <label className="absolute -top-3 left-3 bg-neutral-100 px-1 text-sm font-medium text-purple-600">
+              <label className="absolute -top-3 left-3 bg-neutral-100 px-1 text-sm font-medium text-[#6C25FF]">
                 Phone number*
               </label>
               <input
                 type="tel"
+                name="phoneNumber"
+                value={formData.phoneNumber}
+                onChange={handleChange}
                 placeholder="Enter phone number"
-                className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6C25FF]"
               />
             </div>
 
             <div className="mt-6 relative">
-              <label className="absolute -top-3 left-3 bg-neutral-100 px-1 text-sm font-medium text-purple-600">
+              <label className="absolute -top-3 left-3 bg-neutral-100 px-1 text-sm font-medium text-[#6C25FF]">
                 Email Address
               </label>
               <input
                 type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
                 placeholder="Enter email address"
-                className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6C25FF]"
               />
             </div>
 
             <div className="mt-6 relative">
-              <label className="absolute -top-3 left-3 bg-neutral-100 px-1 text-sm font-medium text-purple-600">
+              <label className="absolute -top-3 left-3 bg-neutral-100 px-1 text-sm font-medium text-[#6C25FF]">
                 Password*
               </label>
               <input
                 type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
                 placeholder="Enter password"
-                className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6C25FF]"
               />
             </div>
 
             <div className="mt-6 relative">
-              <label className="absolute -top-3 left-3 bg-neutral-100 px-1 text-sm font-medium text-purple-600">
+              <label className="absolute -top-3 left-3 bg-neutral-100 px-1 text-sm font-medium text-[#6C25FF]">
                 Company name
               </label>
               <input
                 type="text"
+                name="companyName"
+                value={formData.companyName}
+                onChange={handleChange}
                 placeholder="Enter company name"
-                className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6C25FF]"
               />
             </div>
 
@@ -74,16 +116,22 @@ const SignUp = () => {
                 <label className="flex items-center space-x-2">
                   <input
                     type="radio"
-                    name="agency"
-                    className="form-radio text-purple-600"
+                    name="isAgency"
+                    value="yes"
+                    checked={formData.isAgency === "yes"}
+                    onChange={handleChange}
+                    className="form-radio text-[#6C25FF]"
                   />
                   <span>Yes</span>
                 </label>
                 <label className="flex items-center space-x-2">
                   <input
                     type="radio"
-                    name="agency"
-                    className="form-radio text-purple-600"
+                    name="isAgency"
+                    value="no"
+                    checked={formData.isAgency === "no"}
+                    onChange={handleChange}
+                    className="form-radio text-[#6C25FF]"
                   />
                   <span>No</span>
                 </label>
@@ -93,8 +141,15 @@ const SignUp = () => {
         </div>
 
         {/* Button positioned at the bottom */}
-        <Link to="/profile">
-          <button className="w-full bg-purple-600 text-white py-2 rounded-lg font-medium hover:bg-purple-700 transition cursonr-pointer">
+        <Link to={isFormValid ? "/profile" : "#"}>
+          <button
+            disabled={!isFormValid}
+            className={`w-full py-3 rounded-lg font-medium ${
+              isFormValid
+                ? "bg-[#6C25FF] text-white cursor-pointer"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
+          >
             Create Account
           </button>
         </Link>
